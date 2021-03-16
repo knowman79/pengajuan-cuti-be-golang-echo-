@@ -1,0 +1,47 @@
+Database :
+1. Tb_Makanan
+ - id (PK)
+ - kode_makanan
+ - nama_makanan
+ - harga
+ - stok
+ - created_at
+ - updated_at
+ - expired_at
+ - updated_by
+ - created_by
+
+2. Tb_user
+ - id
+ - nama_user
+ - username
+ - password
+ - id_role
+ - phone
+ - email
+
+3. Tb_role
+ - id
+ - role
+
+4. Tb_Transaksi
+ - id 
+ - id_user
+ - kode_makanan
+ - jumlah_makanan
+ - created_at
+ - jumlah_uang
+ 
+
+List API 
+
+1. v1/api/transaksi (post)
+2. v1/api/transaksi/readAll (get)
+3. v1/api/transaksi/rekap (get)
+4. v1/api/makanan/readByKode (get)
+5. v1/api/makanan/readAll
+6. v1/api/makanan/create (post)
+7. v1/api/makanan/delete 
+8. v1/api/user/readAll
+9. v1/api/user/save
+10. v1/api/user/delete
