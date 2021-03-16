@@ -1,7 +1,4 @@
-package model
-
-
-
+package models
 
 type RoleModel struct {
 	Id 	int 	`json:"id" validate:"required"`
