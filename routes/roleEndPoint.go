@@ -1,4 +1,4 @@
-package delivery
+package routes
 
 import (
 	"example/service"
@@ -6,9 +6,9 @@ import (
 	"github.com/labstack/echo"
 )
 
-func MakananEndPoint() {
+func RoleEndpoint() {
 	e := echo.New()
-	e.GET("/v1/api/makanan/readAll", service.ReadAllMakanan)
+	e.GET("/role/readAll", service.ReadAllRole)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

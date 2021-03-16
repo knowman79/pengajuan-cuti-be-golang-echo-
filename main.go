@@ -1,10 +1,7 @@
 package main
 
-import (
-	"example/delivery"
-)
+import "example/routes"
 
 func main() {
-	delivery.UserEndpoint()
-	delivery.MakananEndPoint()
+	routes.RoleEndpoint()
 }
