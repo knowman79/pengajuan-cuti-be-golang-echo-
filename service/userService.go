@@ -1,13 +1,13 @@
 package service
 
 import (
-	"example/model"
-	"example/repository"
 	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo"
+	"github.com/my/repo/model"
+	"github.com/my/repo/repository"
 )
 
 func ReadAllUsers(c echo.Context) error {

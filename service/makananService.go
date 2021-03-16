@@ -1,14 +1,14 @@
 package service
 
 import (
-	"example/model"
-	"example/repository"
 	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo"
+	"github.com/my/repo/model"
+	"github.com/my/repo/repository"
 )
 
 func ReadAllMakanan(c echo.Context) error {

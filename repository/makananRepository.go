@@ -1,10 +1,11 @@
 package repository
 
 import (
-	"example/driver"
-	"example/model"
 	"fmt"
 	"time"
+
+	"github.com/my/repo/model"
+	"github.com/my/repo/driver"
 )
 
 func ReadAllMakanan() []model.MakananModel {

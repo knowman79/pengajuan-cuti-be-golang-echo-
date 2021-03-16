@@ -1,9 +1,8 @@
 package delivery
 
 import (
-	"example/service"
-
 	"github.com/labstack/echo"
+	"github.com/my/repo/service"
 )
 
 func MakananEndPoint() {

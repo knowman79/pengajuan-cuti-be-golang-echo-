@@ -1,9 +1,10 @@
 package repository
 
 import (
-	"example/driver"
-	"example/model"
 	"fmt"
+
+	"github.com/my/repo/model"
+	"github.com/my/repo/driver"
 )
 
 func ReadAll() []model.UserModel {

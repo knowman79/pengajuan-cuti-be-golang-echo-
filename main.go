@@ -1,8 +1,6 @@
 package main
 
-import (
-	"example/delivery"
-)
+import "github.com/my/repo/delivery"
 
 func main() {
 	delivery.UserEndpoint()
