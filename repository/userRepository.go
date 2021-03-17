@@ -29,7 +29,7 @@ func ReadAllUser() []models.UserModel {
 		return nil
 	}
 
-	fmt.Printf("%T", items)
+	fmt.Printf("%T\n", items)
 
 	for items.Next() {
 		var each = models.UserModel{}
@@ -62,7 +62,7 @@ func CreateUser(U *models.UserModel) *ResponseModel {
 
 	defer db.Close()
 
-	_, err = db.Exec(`INSERT INTO "tb_user" ("user_id", "name", "username", "password", "role_id") VALUES ($1, $2, $3, $4, $5)`, U.UserId, U.Name, U.Username, U.Password, U.RoleId)
+	_, err = db.Exec(`INSERT INTO "user" ("user_id", "name", "username", "password", "role_id") VALUES ($1, $2, $3, $4, $5)`, U.UserId, U.Name, U.Username, U.Password, U.RoleId)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -85,7 +85,7 @@ func DeleteUser(userId int) *ResponseModel {
 
 	defer db.Close()
 
-	_, err = db.Exec("delete from tb_user where user_id = $1", userId)
+	_, err = db.Exec("delete from user where user_id = $1", userId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed save Data"}
@@ -108,7 +108,7 @@ func UpdateUser(U *models.UserModel, userId int) *ResponseModel {
 
 	defer db.Close()
 
-	_, err = db.Exec("update tb_user set name = $1, username = $2, password = $3 , role_id = $4 where user_id = $5", U.Name, U.Username, U.Password, U.RoleId, userId)
+	_, err = db.Exec("update user set name = $1, username = $2, password = $3 , role_id = $4 where user_id = $5", U.Name, U.Username, U.Password, U.RoleId, userId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed save Data"}
