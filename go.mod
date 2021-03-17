@@ -3,15 +3,6 @@ module example
 go 1.14
 
 require (
-<<<<<<< HEAD
-	github.com/go-pg/pg/v10 v10.8.0 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
-	github.com/joho/godotenv v1.3.0 // indirect
-	github.com/labstack/echo v3.3.10+incompatible
-	github.com/labstack/echo/v4 v4.2.1 // indirect
-	github.com/lib/pq v1.10.0
-	github.com/labstack/gommon v0.3.0 // indirect
-=======
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
@@ -23,5 +14,4 @@ require (
 	golang.org/x/crypto v0.0.0-20210314154223-e6e6c4f2bb5b // indirect
 	golang.org/x/sys v0.0.0-20210305034016-7844c3c200c3 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
->>>>>>> 87d9c5ba7d6a46dcb41318e64e63276e81181fd3
 )
