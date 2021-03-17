@@ -32,6 +32,8 @@ func Endpoint() {
 	e.PATCH("/leave/update", service.UpdateLeave)
 	e.GET("/leave/readById", service.ReadIdLeave)
 	e.DELETE("/leave/deleteDraft", service.DeleteLeaveDraft)
+	e.PATCH("/leave/updateApproved", service.UpdateLeaveApproved)
+	e.PATCH("/leave/updateToInprogress", service.UpdateLeaveOpenToInprogress)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

@@ -57,9 +57,33 @@ func UpdateLeave(c echo.Context) error {
 }
 
 func DeleteLeaveDraft(c echo.Context) error {
-    Res := &ResponseModel{400, "Bad Request"}
-    id := c.QueryParam("formId")
-    data, _ := strconv.Atoi(id)
-    Res = (*ResponseModel)(repository.DeleteLeaveDraft(data))
-    return c.JSON(http.StatusOK, Res)
+	Res := &ResponseModel{400, "Bad Request"}
+	id := c.QueryParam("formId")
+	data, _ := strconv.Atoi(id)
+	Res = (*ResponseModel)(repository.DeleteLeaveDraft(data))
+	return c.JSON(http.StatusOK, Res)
+}
+
+func UpdateLeaveApproved(c echo.Context) error {
+	Res := &ResponseModel{400, "Bad Request"}
+	id := c.QueryParam("formId")
+	data, _ := strconv.Atoi(id)
+	U := new(models.LeaveModel)
+	if err := c.Bind(U); err != nil {
+		return nil
+	}
+	Res = (*ResponseModel)(repository.UpdateLeaveApproved(U, data))
+	return c.JSON(http.StatusOK, Res)
+}
+
+func UpdateLeaveOpenToInprogress(c echo.Context) error {
+	Res := &ResponseModel{400, "Bad Request"}
+	id := c.QueryParam("formId")
+	data, _ := strconv.Atoi(id)
+	U := new(models.LeaveModel)
+	if err := c.Bind(U); err != nil {
+		return nil
+	}
+	Res = (*ResponseModel)(repository.UpdateLeaveOpenToInprogress(U, data))
+	return c.JSON(http.StatusOK, Res)
 }

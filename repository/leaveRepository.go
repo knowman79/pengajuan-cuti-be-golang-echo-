@@ -168,23 +168,71 @@ func UpdateLeave(L *models.LeaveModel, formId int) *ResponseModel {
 }
 
 func DeleteLeaveDraft(formId int) *ResponseModel {
-    Res := &ResponseModel{500, "Internal Server Error"}
-    db, err := driver.ConnectDB()
+	Res := &ResponseModel{500, "Internal Server Error"}
+	db, err := driver.ConnectDB()
 
-    if err != nil {
-        fmt.Println(err.Error())
-        return Res
-    }
+	if err != nil {
+		fmt.Println(err.Error())
+		return Res
+	}
 
-    defer db.Close()
+	defer db.Close()
 
-    _, err = db.Exec("delete from tb_leave where status='draft' and form_id = $1", formId)
-    if err != nil {
-        fmt.Println(err.Error())
-        Res = &ResponseModel{400, "Failed delete Data"}
-        return Res
-    }
-    fmt.Println("Delete success!")
-    Res = &ResponseModel{200, "Success Delete Data"}
-    return Res
+	_, err = db.Exec("delete from tb_leave where status='draft' and form_id = $1", formId)
+	if err != nil {
+		fmt.Println(err.Error())
+		Res = &ResponseModel{400, "Failed delete Data"}
+		return Res
+	}
+	fmt.Println("Delete success!")
+	Res = &ResponseModel{200, "Success Delete Data"}
+	return Res
+}
+
+func UpdateLeaveApproved(L *models.LeaveModel, formId int) *ResponseModel {
+	Res := &ResponseModel{500, "Internal Server Error"}
+	db, err := driver.ConnectDB()
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return Res
+	}
+
+	defer db.Close()
+
+	_, err = db.Exec("update tb_leave set status = 'Approved' where status = 'Inprogress' and form_id = $1",
+		formId)
+	if err != nil {
+		fmt.Println(err.Error())
+		Res = &ResponseModel{400, "Failed save Data"}
+		return Res
+	}
+	fmt.Println("Update success!")
+	Res = &ResponseModel{200, "Success save Data"}
+	return Res
+}
+
+func UpdateLeaveOpenToInprogress(L *models.LeaveModel, formId int) *ResponseModel {
+	Res := &ResponseModel{500, "Internal Server Error"}
+	db, err := driver.ConnectDB()
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return Res
+	}
+
+	defer db.Close()
+
+	_, err = db.Exec("update tb_leave set status = 'Inprogress' where status = 'Open' and form_id = $1",
+		formId)
+	if err != nil {
+		fmt.Println(err.Error())
+		Res = &ResponseModel{400, "Failed save Data"}
+		return Res
+	}
+	fmt.Println("Update success!")
+	Res = &ResponseModel{200, "Success save Data"}
+	return Res
 }
