@@ -1,13 +1,15 @@
 package service
 
 import (
+	"example/repository"
+
 	"net/http"
 
 	"github.com/labstack/echo"
-	"github.com/my/repo/repository"
 )
 
+//ReadAllRole function
 func ReadAllRole(c echo.Context) error {
-	result := repository.ReadAll()
+	result := repository.ReadAllRole()
 	return c.JSON(http.StatusOK, result)
 }

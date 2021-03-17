@@ -1,7 +1,7 @@
 package main
 
-import "github.com/my/repo/routes"
+import "example/routes"
 
 func main() {
-	routes.RoleEndpoint()
+	routes.Endpoint()
 }
