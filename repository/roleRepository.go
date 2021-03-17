@@ -1,7 +1,6 @@
 package repository
 
 import (
-
 	"example/driver"
 	"example/models"
 	"fmt"
@@ -18,6 +17,7 @@ func ReadAllRole() []models.RoleModel {
 	defer db.Close()
 
 	var result []models.RoleModel
+
 	items, err := db.Query("select role_id,role from tb_role")
 	if err != nil {
 		fmt.Println(err.Error())
