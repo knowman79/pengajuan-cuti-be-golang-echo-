@@ -55,3 +55,11 @@ func UpdateLeave(c echo.Context) error {
 	Res = (*ResponseModel)(repository.UpdateLeave(U, data))
 	return c.JSON(http.StatusOK, Res)
 }
+
+func DeleteLeaveDraft(c echo.Context) error {
+    Res := &ResponseModel{400, "Bad Request"}
+    id := c.QueryParam("formId")
+    data, _ := strconv.Atoi(id)
+    Res = (*ResponseModel)(repository.DeleteLeaveDraft(data))
+    return c.JSON(http.StatusOK, Res)
+}
