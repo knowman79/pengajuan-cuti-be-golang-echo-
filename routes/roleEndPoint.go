@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo"
 )
 
+//RoleEndPoint function
 func RoleEndpoint() {
 	e := echo.New()
 	e.GET("/role/readAll", service.ReadAllRole)

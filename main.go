@@ -4,4 +4,5 @@ import "example/routes"
 
 func main() {
 	routes.RoleEndpoint()
+	routes.UserEndpoint()
 }

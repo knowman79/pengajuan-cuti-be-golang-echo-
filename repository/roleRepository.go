@@ -1,12 +1,12 @@
 package repository
 
 import (
-	"fmt"
 	"example/driver"
 	"example/models"
+	"fmt"
 )
 
-func ReadAll() []models.RoleModel {
+func ReadAllRole() []models.RoleModel {
 	db, err := driver.ConnectDB()
 
 	if err != nil {
@@ -24,7 +24,7 @@ func ReadAll() []models.RoleModel {
 		return nil
 	}
 
-	fmt.Printf("%T", items)
+	fmt.Printf("%T\n", items)
 
 	for items.Next() {
 		var each = models.RoleModel{}
