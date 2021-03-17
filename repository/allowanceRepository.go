@@ -23,7 +23,7 @@ func ReadAllAllowance() []models.AllowanceModel {
 
 	var result []models.AllowanceModel
 
-	items, err := db.Query("select leave_id, user_id, current_leave, last_year_leave from leave_allowance")
+	items, err := db.Query("select leave_id, user_id, current_leave, last_year_leave from tb_leave_allowance")
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil
@@ -62,7 +62,7 @@ func CreateAllowance(U *models.AllowanceModel) *ResponseModelAllowance {
 
 	defer db.Close()
 
-	_, err = db.Exec(`INSERT INTO "leave_allowance" ("leave_id", "user_id", "current_leave", "last_year_leave") VALUES ($1, $2, $3, $4)`, U.LeaveId, U.UserId, U.CurrentLeave, U.LastYearLeave)
+	_, err = db.Exec(`INSERT INTO "tb_leave_allowance" ( "user_id", "current_leave", "last_year_leave") VALUES ($1, $2, $3)`, U.UserId, U.CurrentLeave, U.LastYearLeave)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -85,7 +85,7 @@ func DeleteAllowance(leaveId int) *ResponseModelAllowance {
 
 	defer db.Close()
 
-	_, err = db.Exec("delete from leave_allowance where leave_id = $1", leaveId)
+	_, err = db.Exec("delete from tb_leave_allowance where leave_id = $1", leaveId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModelAllowance{400, "Failed save Data"}
@@ -108,7 +108,7 @@ func UpdateAllowance(U *models.AllowanceModel, leaveId int) *ResponseModelAllowa
 
 	defer db.Close()
 
-	_, err = db.Exec("update leave_allowance set user_id = $1, current_leave = $2, last_year_leave = $3 where leave_id = $5", U.UserId, U.CurrentLeave, U.LastYearLeave, leaveId)
+	_, err = db.Exec("update tb_leave_allowance set user_id = $1, current_leave = $2, last_year_leave = $3 where leave_id = $4", U.UserId, U.CurrentLeave, U.LastYearLeave, leaveId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModelAllowance{400, "Failed save Data"}

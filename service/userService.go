@@ -56,3 +56,9 @@ func UpdateUser(c echo.Context) error {
 	Res = (*ResponseModel)(repository.UpdateUser(U, data))
 	return c.JSON(http.StatusOK, Res)
 }
+
+// ReadAllOlUser function
+func ReadAllOlUser(c echo.Context) error {
+	result := repository.ReadAllOlUser()
+	return c.JSON(http.StatusOK, result)
+}

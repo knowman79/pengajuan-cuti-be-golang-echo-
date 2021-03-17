@@ -23,7 +23,7 @@ func ReadAllUser() []models.UserModel {
 
 	var result []models.UserModel
 
-	items, err := db.Query("select user_id, name, username, password, role_id from user")
+	items, err := db.Query("select user_id, name, username, password, role_id, division from tb_user")
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil
@@ -33,7 +33,7 @@ func ReadAllUser() []models.UserModel {
 
 	for items.Next() {
 		var each = models.UserModel{}
-		var err = items.Scan(&each.UserId, &each.Name, &each.Username, &each.Password, &each.RoleId)
+		var err = items.Scan(&each.UserId, &each.Name, &each.Username, &each.Password, &each.RoleId, &each.Division)
 
 		if err != nil {
 			fmt.Println(err.Error())
@@ -62,7 +62,7 @@ func CreateUser(U *models.UserModel) *ResponseModel {
 
 	defer db.Close()
 
-	_, err = db.Exec(`INSERT INTO "user" ("user_id", "name", "username", "password", "role_id") VALUES ($1, $2, $3, $4, $5)`, U.UserId, U.Name, U.Username, U.Password, U.RoleId)
+	_, err = db.Exec(`INSERT INTO "tb_user" ("name", "username", "password", "role_id", "division") VALUES ($1, $2, $3, $4, $5)`, U.Name, U.Username, U.Password, U.RoleId, U.Division)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -85,7 +85,7 @@ func DeleteUser(userId int) *ResponseModel {
 
 	defer db.Close()
 
-	_, err = db.Exec("delete from user where user_id = $1", userId)
+	_, err = db.Exec("delete from tb_user where user_id = $1", userId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed save Data"}
@@ -108,7 +108,7 @@ func UpdateUser(U *models.UserModel, userId int) *ResponseModel {
 
 	defer db.Close()
 
-	_, err = db.Exec("update user set name = $1, username = $2, password = $3 , role_id = $4 where user_id = $5", U.Name, U.Username, U.Password, U.RoleId, userId)
+	_, err = db.Exec("update tb_user set name = $1, username = $2, password = $3 , role_id = $4, division = $5 where user_id = $6", U.Name, U.Username, U.Password, U.RoleId, U.Division, userId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed save Data"}
@@ -117,4 +117,45 @@ func UpdateUser(U *models.UserModel, userId int) *ResponseModel {
 	fmt.Println("Update success!")
 	Res = &ResponseModel{200, "Success save Data"}
 	return Res
+}
+
+func ReadAllOlUser() []models.UserOlModel {
+	db, err := driver.ConnectDB()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	defer db.Close()
+
+	var result []models.UserOlModel
+
+	items, err := db.Query("select u.user_id, u.name, r.role, u.division from tb_user as u join tb_role as r on u.role_id=r.role_id")
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	fmt.Printf("%T", items)
+
+	for items.Next() {
+		var each = models.UserOlModel{}
+		var err = items.Scan(&each.UserId, &each.Name, &each.Role, &each.Division)
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return nil
+		}
+
+		result = append(result, each)
+
+	}
+
+	if err = items.Err(); err != nil {
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	return result
 }
