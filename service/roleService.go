@@ -8,7 +8,8 @@ import (
 	"github.com/labstack/echo"
 )
 
+//ReadAllRole function
 func ReadAllRole(c echo.Context) error {
-	result := repository.ReadAll()
+	result := repository.ReadAllRole()
 	return c.JSON(http.StatusOK, result)
 }
