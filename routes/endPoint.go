@@ -4,12 +4,13 @@ import (
 	"example/service"
 
 	"github.com/labstack/echo"
-	//"github.com/labstack/echo/v4/middleware"
 )
 
 //RoleEndPoint function
 func Endpoint() {
 	e := echo.New()
+
+	//roles endpoint
 	e.GET("/role/readAll", service.ReadAllRole)
 
 	//user endpoint
