@@ -28,7 +28,7 @@ func ReadAllRole() []models.RoleModel {
 
 	for items.Next() {
 		var each = models.RoleModel{}
-		var err = items.Scan(&each.Id, &each.Role)
+		var err = items.Scan(&each.RoleId, &each.Role)
 
 		if err != nil {
 			fmt.Println(err.Error())

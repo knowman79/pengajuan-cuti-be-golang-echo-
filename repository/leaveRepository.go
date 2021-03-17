@@ -4,6 +4,7 @@ import (
 	"example/driver"
 	"example/models"
 	"fmt"
+	"time"
 )
 
 func ReadAllLeave() []models.LeaveModel {
@@ -102,10 +103,12 @@ func CreateLeave(L *models.LeaveModel) *ResponseModel {
 
 	defer db.Close()
 
+	date := time.Now()
+
 	_, err = db.Exec(`INSERT INTO "tb_leave" ( "user_id", "name", "type", "created_by", "modified_by", "created_date", "last_modified_date",
 					"start_date", "end_date", "description", "replacement_id", "address", "phone", "status")
 					 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
-		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, L.CreatedDate, L.LastModifiedDate, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status)
+		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, date, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -150,9 +153,10 @@ func UpdateLeave(L *models.LeaveModel, formId int) *ResponseModel {
 	}
 
 	defer db.Close()
+	date := time.Now()
 
 	_, err = db.Exec("update tb_leave set user_id = $1, name = $2, type = $3 , created_by = $4, modified_by = $5, created_date = $6, last_modified_date =$7, start_date = $8, end_date = $9, description = $10, replacement_id =$11, address = $12, phone = $13, status = $14 where form_id = $15",
-		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, L.CreatedDate, L.LastModifiedDate, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status, formId)
+		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, L.CreatedDate, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status, formId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed save Data"}
