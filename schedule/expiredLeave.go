@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func CutiHangusScheduler() {
+func ExpiredLeaveScheduler() {
 	db, err := driver.ConnectDB()
 
 	log.Println("Running Scheduler")

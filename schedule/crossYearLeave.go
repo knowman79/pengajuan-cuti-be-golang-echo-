@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func CutiLintasTahunScheduler() {
+func CrossYearLeaveScheduler() {
 	db, err := driver.ConnectDB()
 
 	log.Println("Running Scheduler")
