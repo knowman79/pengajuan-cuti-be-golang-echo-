@@ -2,13 +2,31 @@ package routes
 
 import (
 	"example/service"
+	"net/http"
 
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
+	//"github.com/labstack/echo/v4/middleware"
 )
 
 //RoleEndPoint function
 func Endpoint() {
 	e := echo.New()
+
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	// CORS default
+	// Allows requests from any origin wth GET, HEAD, PUT, POST or DELETE method.
+	// e.Use(middleware.CORS())
+
+	// CORS restricted
+	// Allows requests from any `https://labstack.com` or `https://labstack.net` origin
+	// wth GET, PUT, POST or DELETE method.
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"https://localhost:8080"},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
 
 	//roles endpoint
 	e.GET("/role/readAll", service.ReadAllRole)
