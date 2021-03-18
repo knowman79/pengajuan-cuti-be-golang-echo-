@@ -345,3 +345,59 @@ func UpdateLeaveCanceled(L *models.LeaveModel, M *models.AllowanceModel) *Respon
 	Res = &ResponseModel{200, "Success save Data"}
 	return Res
 }
+
+func UpdateRejectBySPV(L *models.LeaveModel, M *models.AllowanceModel) *ResponseModel {
+	Res := &ResponseModel{500, "Internal Server Error"}
+	db, err := driver.ConnectDB()
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return Res
+	}
+
+	defer db.Close()
+
+	_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Reject by Supervisor' WHERE tb_leave.form_id = $1 and status = 'Open' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET current_leave = 12, last_year_leave = last_year_leave + (((select duration from shape_update) + current_leave) - 12) WHERE ((select duration from shape_update) + current_leave) > 12 and (tb_leave_allowance.leave_id) IN (select leave_id from shape_update)", L.FormId)
+
+	_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Reject by Supervisor' WHERE tb_leave.form_id = $1 and status = 'Open' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET current_leave = current_leave + (select duration from shape_update) WHERE ((select duration from shape_update) + current_leave) < 13 and (tb_leave_allowance.leave_id) IN (select leave_id from shape_update)", L.FormId)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		Res = &ResponseModel{400, "Failed save Data"}
+		return Res
+	}
+
+	fmt.Println("Update success!")
+	Res = &ResponseModel{200, "Success save Data"}
+	return Res
+
+}
+
+func UpdateLeaveRejectByHRD(L *models.LeaveModel, M *models.AllowanceModel) *ResponseModel {
+	Res := &ResponseModel{500, "Internal Server Error"}
+	db, err := driver.ConnectDB()
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return Res
+	}
+
+	defer db.Close()
+
+	_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Reject by HRD' WHERE tb_leave.form_id = $1 and status = 'Inprogress' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET current_leave = 12, last_year_leave = last_year_leave + (((select duration from shape_update) + current_leave) - 12) WHERE ((select duration from shape_update) + current_leave) > 12 and (tb_leave_allowance.leave_id) IN (select leave_id from shape_update)", L.FormId)
+
+	_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Reject by HRD' WHERE tb_leave.form_id = $1 and status = 'Inprogress' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET current_leave = current_leave + (select duration from shape_update) WHERE ((select duration from shape_update) + current_leave) < 13 and (tb_leave_allowance.leave_id) IN (select leave_id from shape_update)", L.FormId)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		Res = &ResponseModel{400, "Failed save Data"}
+		return Res
+	}
+
+	fmt.Println("Update success!")
+	Res = &ResponseModel{200, "Success save Data"}
+	return Res
+
+}

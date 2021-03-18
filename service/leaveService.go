@@ -108,3 +108,25 @@ func UpdateLeaveCanceled(c echo.Context) error {
 	Res = (*ResponseModel)(repository.UpdateLeaveCanceled(U, L))
 	return c.JSON(http.StatusOK, Res)
 }
+
+func UpdateRejectBySPV(c echo.Context) error {
+	Res := &ResponseModel{400, "Bad Request"}
+	U := new(models.LeaveModel)
+	L := new(models.AllowanceModel)
+	if err := c.Bind(U); err != nil {
+		return nil
+	}
+	Res = (*ResponseModel)(repository.UpdateRejectBySPV(U, L))
+	return c.JSON(http.StatusOK, Res)
+}
+
+func UpdateLeaveRejectByHRD(c echo.Context) error {
+	Res := &ResponseModel{400, "Bad Request"}
+	U := new(models.LeaveModel)
+	L := new(models.AllowanceModel)
+	if err := c.Bind(U); err != nil {
+		return nil
+	}
+	Res = (*ResponseModel)(repository.UpdateLeaveRejectByHRD(U, L))
+	return c.JSON(http.StatusOK, Res)
+}

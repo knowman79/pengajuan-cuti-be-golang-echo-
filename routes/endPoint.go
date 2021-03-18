@@ -102,6 +102,8 @@ func Endpoint() {
 	e.GET("/leave/readLeaveByName", service.ReadLeaveByName)
 	e.PUT("/leave/updateToOpen", service.UpdateLeaveDraftToOpen)
 	e.PUT("/leave/updateToCanceled", service.UpdateLeaveCanceled)
+	e.PUT("/leave/UpdateRejectBySPV", service.UpdateRejectBySPV)
+	e.PUT("/leave/updateToRejectByHRD", service.UpdateLeaveRejectByHRD)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
