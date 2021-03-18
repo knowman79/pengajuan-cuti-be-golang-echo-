@@ -97,3 +97,14 @@ func UpdateLeaveDraftToOpen(c echo.Context) error {
 	Res = (*ResponseModel)(repository.UpdateLeaveDraftToOpen(U, L))
 	return c.JSON(http.StatusOK, Res)
 }
+
+func UpdateLeaveCanceled(c echo.Context) error {
+	Res := &ResponseModel{400, "Bad Request"}
+	U := new(models.LeaveModel)
+	L := new(models.AllowanceModel)
+	if err := c.Bind(U); err != nil {
+		return nil
+	}
+	Res = (*ResponseModel)(repository.UpdateLeaveCanceled(U, L))
+	return c.JSON(http.StatusOK, Res)
+}

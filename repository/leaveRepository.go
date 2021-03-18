@@ -19,7 +19,8 @@ func ReadAllLeave() []models.ResponseLeaveModel {
 
 	var result []models.ResponseLeaveModel
 
-	items, err := db.Query(`select form_id, tb_leave.user_id, tb_leave.name, type, created_by, modified_by, created_date, last_modified_date, start_date, end_date, end_date-start_date, description, replacement_id, address, phone, status, leave_id, tb_user."name" from tb_leave JOIN tb_user ON replacement_id = tb_user.user_id`)
+	items, err := db.Query(`select form_id, tb_leave.user_id, tb_leave.name, type, created_by, modified_by, created_date, last_modified_date, start_date, end_date, end_date-start_date, description, replacement_id, address, phone, status, tb_leave.leave_id, tb_user."name", tb_leave_allowance."current_leave" from tb_leave JOIN tb_user ON replacement_id = tb_user.user_id JOIN tb_leave_allowance ON tb_leave.user_id = tb_leave_allowance.user_id`)
+
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil
@@ -31,7 +32,7 @@ func ReadAllLeave() []models.ResponseLeaveModel {
 		var each = models.ResponseLeaveModel{}
 		var err = items.Scan(&each.FormId, &each.UserId, &each.Name, &each.Types, &each.CreatedBy, &each.ModifiedBy,
 			&each.CreatedDate, &each.LastModifiedDate, &each.StartDate, &each.EndDate, &each.LeaveDuration, &each.Description,
-			&each.ReplacementId, &each.Address, &each.Phone, &each.Status, &each.LeaveId, &each.ReplacementName)
+			&each.ReplacementId, &each.Address, &each.Phone, &each.Status, &each.LeaveId, &each.ReplacementName, &each.Current_leave)
 
 		if err != nil {
 			fmt.Println(err.Error())
@@ -249,7 +250,7 @@ func ReadLeaveByName(name string) []models.LeaveByNameModel {
 
 	var result []models.LeaveByNameModel
 
-	items, err := db.Query(`SELECT created_date, start_date, end_date, description, status, duration FROM tb_leave WHERE name =$1 `, name)
+	items, err := db.Query(`SELECT created_date, start_date, end_date, type , status, duration FROM tb_leave WHERE name =$1 `, name)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil
@@ -259,7 +260,7 @@ func ReadLeaveByName(name string) []models.LeaveByNameModel {
 
 	for items.Next() {
 		var each = models.LeaveByNameModel{}
-		var err = items.Scan(&each.CreatedDate, &each.StartDate, &each.EndDate, &each.Description,
+		var err = items.Scan(&each.CreatedDate, &each.StartDate, &each.EndDate, &each.Type,
 			&each.Status, &each.Duration)
 
 		if err != nil {
@@ -270,7 +271,6 @@ func ReadLeaveByName(name string) []models.LeaveByNameModel {
 		result = append(result, each)
 
 	}
-
 	if err = items.Err(); err != nil {
 		fmt.Println(err.Error())
 		return nil
@@ -302,6 +302,38 @@ func UpdateLeaveDraftToOpen(L *models.LeaveModel, M *models.AllowanceModel) *Res
 		_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Open' WHERE tb_leave.form_id = $1 and status = 'Draft' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET last_year_leave = 0, current_leave = current_leave - ((select duration from shape_update) - last_year_leave) WHERE (tb_leave_allowance.leave_id) IN (select leave_id from shape_update);",
 			L.FormId)
 	}
+
+	if err != nil {
+		fmt.Println(err.Error())
+		Res = &ResponseModel{400, "Failed save Data"}
+		return Res
+	}
+
+	fmt.Println("Update success!")
+	Res = &ResponseModel{200, "Success save Data"}
+	return Res
+}
+
+func UpdateLeaveCanceled(L *models.LeaveModel, M *models.AllowanceModel) *ResponseModel {
+	Res := &ResponseModel{500, "Internal Server Error"}
+	db, err := driver.ConnectDB()
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return Res
+	}
+
+	defer db.Close()
+
+	//var comebackLeave int = (L.Duration + M.CurrentLeave)
+
+	//if comebackLeave > 12 {
+	_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Canceled' WHERE tb_leave.form_id = $1 and status = 'Open' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET current_leave = 12, last_year_leave = last_year_leave + (((select duration from shape_update) + current_leave) - 12) WHERE ((select duration from shape_update) + current_leave) > 12 and (tb_leave_allowance.leave_id) IN (select leave_id from shape_update)", L.FormId)
+
+	//} else {
+	_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Canceled' WHERE tb_leave.form_id = $1 and status = 'Open' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET current_leave = current_leave + (select duration from shape_update) WHERE ((select duration from shape_update) + current_leave) < 13 and (tb_leave_allowance.leave_id) IN (select leave_id from shape_update)", L.FormId)
+	//}
 
 	if err != nil {
 		fmt.Println(err.Error())
