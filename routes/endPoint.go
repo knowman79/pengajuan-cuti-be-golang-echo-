@@ -74,6 +74,9 @@ func Endpoint() {
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
+	//login endpoint
+	e.GET("/login", service.Login)
+
 	//roles endpoint
 	e.GET("/role/readAll", service.ReadAllRole)
 
@@ -104,6 +107,7 @@ func Endpoint() {
 	e.PUT("/leave/updateToCanceled", service.UpdateLeaveCanceled)
 	e.PUT("/leave/UpdateRejectBySPV", service.UpdateRejectBySPV)
 	e.PUT("/leave/updateToRejectByHRD", service.UpdateLeaveRejectByHRD)
+	e.PUT("/leave/updateIfStatusDraft", service.UpdateStatusDraft)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
