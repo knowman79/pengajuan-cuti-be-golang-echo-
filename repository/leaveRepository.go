@@ -142,7 +142,7 @@ func DeleteLeave(formId int) *ResponseModel {
 	return Res
 }
 
-func UpdateLeave(L *models.LeaveModel, formId int) *ResponseModel {
+func UpdateLeave(L *models.LeaveModel) *ResponseModel {
 	Res := &ResponseModel{500, "Internal Server Error"}
 	db, err := driver.ConnectDB()
 
@@ -156,7 +156,7 @@ func UpdateLeave(L *models.LeaveModel, formId int) *ResponseModel {
 	date := time.Now()
 
 	_, err = db.Exec("update tb_leave set user_id = $1, name = $2, type = $3 , created_by = $4, modified_by = $5, created_date = $6, last_modified_date =$7, start_date = $8, end_date = $9, description = $10, replacement_id =$11, address = $12, phone = $13, status = $14, leave_id = $15 where form_id = $16",
-		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, L.CreatedDate, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status, L.LeaveId, formId)
+		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, L.CreatedDate, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status, L.LeaveId, L.FormId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed save Data"}
@@ -167,7 +167,7 @@ func UpdateLeave(L *models.LeaveModel, formId int) *ResponseModel {
 	return Res
 }
 
-func DeleteLeaveDraft(formId int) *ResponseModel {
+func DeleteLeaveDraft(L *models.LeaveModel) *ResponseModel {
 	Res := &ResponseModel{500, "Internal Server Error"}
 	db, err := driver.ConnectDB()
 
@@ -178,7 +178,7 @@ func DeleteLeaveDraft(formId int) *ResponseModel {
 
 	defer db.Close()
 
-	_, err = db.Exec("delete from tb_leave where status='draft' and form_id = $1", formId)
+	_, err = db.Exec("delete from tb_leave where status='Draft' and form_id = $1", L.FormId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed delete Data"}
@@ -189,7 +189,7 @@ func DeleteLeaveDraft(formId int) *ResponseModel {
 	return Res
 }
 
-func UpdateLeaveApproved(L *models.LeaveModel, formId int) *ResponseModel {
+func UpdateLeaveApproved(L *models.LeaveModel) *ResponseModel {
 	Res := &ResponseModel{500, "Internal Server Error"}
 	db, err := driver.ConnectDB()
 
@@ -202,7 +202,7 @@ func UpdateLeaveApproved(L *models.LeaveModel, formId int) *ResponseModel {
 	defer db.Close()
 
 	_, err = db.Exec("update tb_leave set status = 'Approved' where status = 'Inprogress' and form_id = $1",
-		formId)
+		L.FormId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed save Data"}
@@ -213,7 +213,7 @@ func UpdateLeaveApproved(L *models.LeaveModel, formId int) *ResponseModel {
 	return Res
 }
 
-func UpdateLeaveOpenToInprogress(L *models.LeaveModel, formId int) *ResponseModel {
+func UpdateLeaveOpenToInprogress(L *models.LeaveModel) *ResponseModel {
 	Res := &ResponseModel{500, "Internal Server Error"}
 	db, err := driver.ConnectDB()
 
@@ -226,7 +226,7 @@ func UpdateLeaveOpenToInprogress(L *models.LeaveModel, formId int) *ResponseMode
 	defer db.Close()
 
 	_, err = db.Exec("update tb_leave set status = 'Inprogress' where status = 'Open' and form_id = $1",
-		formId)
+		L.FormId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed save Data"}
@@ -279,7 +279,7 @@ func ReadLeaveByName(name string) []models.LeaveByNameModel {
 	return result
 }
 
-func UpdateLeaveDraftToOpen(L *models.LeaveModel, M *models.AllowanceModel, formId int) *ResponseModel {
+func UpdateLeaveDraftToOpen(L *models.LeaveModel, M *models.AllowanceModel) *ResponseModel {
 	Res := &ResponseModel{500, "Internal Server Error"}
 	db, err := driver.ConnectDB()
 
@@ -296,11 +296,11 @@ func UpdateLeaveDraftToOpen(L *models.LeaveModel, M *models.AllowanceModel, form
 
 	if M.LastYearLeave > leaveTotal {
 		_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Open' WHERE tb_leave.form_id = $1 and status = 'Draft' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET last_year_leave = last_year_leave - (select duration from shape_update) WHERE (tb_leave_allowance.leave_id) IN (select leave_id from shape_update)",
-			formId)
+			L.FormId)
 
 	} else {
 		_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Open' WHERE tb_leave.form_id = $1 and status = 'Draft' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET last_year_leave = 0, current_leave = current_leave - ((select duration from shape_update) - last_year_leave) WHERE (tb_leave_allowance.leave_id) IN (select leave_id from shape_update);",
-			formId)
+			L.FormId)
 	}
 
 	if err != nil {
