@@ -236,3 +236,80 @@ func UpdateLeaveOpenToInprogress(L *models.LeaveModel, formId int) *ResponseMode
 	Res = &ResponseModel{200, "Success save Data"}
 	return Res
 }
+
+func ReadLeaveByName(name string) []models.LeaveByNameModel {
+	db, err := driver.ConnectDB()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	defer db.Close()
+
+	var result []models.LeaveByNameModel
+
+	items, err := db.Query(`SELECT created_date, start_date, end_date, description, status, duration FROM tb_leave WHERE name =$1 `, name)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	fmt.Printf("%T\n", items)
+
+	for items.Next() {
+		var each = models.LeaveByNameModel{}
+		var err = items.Scan(&each.CreatedDate, &each.StartDate, &each.EndDate, &each.Description,
+			&each.Status, &each.Duration)
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return nil
+		}
+
+		result = append(result, each)
+
+	}
+
+	if err = items.Err(); err != nil {
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	return result
+}
+
+func UpdateLeaveDraftToOpen(L *models.LeaveModel, M *models.AllowanceModel, formId int) *ResponseModel {
+	Res := &ResponseModel{500, "Internal Server Error"}
+	db, err := driver.ConnectDB()
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return Res
+	}
+
+	defer db.Close()
+
+	var leaveTotal int
+	leaveTotal = (L.EndDate.Day() - L.StartDate.Day())
+
+	if M.LastYearLeave > leaveTotal {
+		_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Open' WHERE tb_leave.form_id = $1 and status = 'Draft' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET last_year_leave = last_year_leave - (select duration from shape_update) WHERE (tb_leave_allowance.leave_id) IN (select leave_id from shape_update)",
+			formId)
+
+	} else {
+		_, err = db.Exec("with shape_update as ( UPDATE tb_leave SET status = 'Open' WHERE tb_leave.form_id = $1 and status = 'Draft' returning tb_leave.leave_id, tb_leave.duration) UPDATE tb_leave_allowance SET last_year_leave = 0, current_leave = current_leave - ((select duration from shape_update) - last_year_leave) WHERE (tb_leave_allowance.leave_id) IN (select leave_id from shape_update);",
+			formId)
+	}
+
+	if err != nil {
+		fmt.Println(err.Error())
+		Res = &ResponseModel{400, "Failed save Data"}
+		return Res
+	}
+
+	fmt.Println("Update success!")
+	Res = &ResponseModel{200, "Success save Data"}
+	return Res
+}

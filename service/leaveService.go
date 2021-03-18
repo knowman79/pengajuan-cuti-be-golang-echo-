@@ -87,3 +87,23 @@ func UpdateLeaveOpenToInprogress(c echo.Context) error {
 	Res = (*ResponseModel)(repository.UpdateLeaveOpenToInprogress(U, data))
 	return c.JSON(http.StatusOK, Res)
 }
+
+func ReadLeaveByName(c echo.Context) error {
+	name := c.QueryParam("name")
+	// data, _ := strconv.Atoi(name)
+	result := repository.ReadLeaveByName(name)
+	return c.JSON(http.StatusOK, result)
+}
+
+func UpdateLeaveDraftToOpen(c echo.Context) error {
+	Res := &ResponseModel{400, "Bad Request"}
+	id := c.QueryParam("formId")
+	data, _ := strconv.Atoi(id)
+	U := new(models.LeaveModel)
+	L := new(models.AllowanceModel)
+	if err := c.Bind(U); err != nil {
+		return nil
+	}
+	Res = (*ResponseModel)(repository.UpdateLeaveDraftToOpen(U, L, data))
+	return c.JSON(http.StatusOK, Res)
+}

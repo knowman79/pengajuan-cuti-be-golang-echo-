@@ -99,6 +99,8 @@ func Endpoint() {
 	e.DELETE("/leave/deleteDraft", service.DeleteLeaveDraft)
 	e.PATCH("/leave/updateApproved", service.UpdateLeaveApproved)
 	e.PATCH("/leave/updateToInprogress", service.UpdateLeaveOpenToInprogress)
+	e.GET("/leave/readLeaveByName", service.ReadLeaveByName)
+	e.PATCH("/leave/updateToOpen", service.UpdateLeaveDraftToOpen)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
