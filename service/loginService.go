@@ -53,7 +53,7 @@ func Login(c echo.Context) error {
 
 				signedToken, err := token.SignedString(JWT_SIGNATURE_KEY)
 				if err != nil {
-					return c.JSON(http.StatusForbidden, err)
+					return c.JSON(http.StatusBadRequest, err)
 				}
 
 				result := models.ResponseLogin{
@@ -69,7 +69,7 @@ func Login(c echo.Context) error {
 					Token:   "",
 					Message: "Wrong Password!",
 				}
-				return c.JSON(http.StatusForbidden, response)
+				return c.JSON(http.StatusOK, response)
 			}
 		}
 	} else {
@@ -77,7 +77,7 @@ func Login(c echo.Context) error {
 			Token:   "",
 			Message: "Username does not registered!",
 		}
-		return c.JSON(http.StatusForbidden, response)
+		return c.JSON(http.StatusOK, response)
 	}
 
 	return nil
