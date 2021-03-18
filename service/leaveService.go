@@ -13,10 +13,11 @@ import (
 func CreateLeave(c echo.Context) error {
 	Res := &ResponseModel{400, "Bad Request"}
 	U := new(models.LeaveModel)
+	L := new(models.AllowanceModel)
 	if err := c.Bind(U); err != nil {
 		return nil
 	}
-	Res = (*ResponseModel)(repository.CreateLeave(U))
+	Res = (*ResponseModel)(repository.CreateLeave(U, L))
 	return c.JSON(http.StatusOK, Res)
 }
 
