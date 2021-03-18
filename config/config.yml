@@ -1,0 +1,11 @@
+server:
+  host: "139.99.67.15"
+  port: 5423
+
+database:
+  dbname: "dbcuti_m3"
+  dbuser: "wrdev"
+  dbpassword: "Majuber54Ma2020!"
+
+EXAMPLE_VAR: "variable from config.yml"
+EXAMPLE_PATH: "path from config.yml"

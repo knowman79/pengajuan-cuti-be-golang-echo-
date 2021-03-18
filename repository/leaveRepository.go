@@ -410,3 +410,31 @@ func UpdateLeaveRejectByHRD(L *models.LeaveModel, M *models.AllowanceModel) *Res
 	return Res
 
 }
+
+func UpdateStatusDraft(L *models.LeaveModel, M *models.AllowanceModel) *ResponseModel {
+	Res := &ResponseModel{500, "Internal Server Error"}
+	db, err := driver.ConnectDB()
+
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return Res
+	}
+
+	defer db.Close()
+
+	ed := time.Date(L.EndDate.Year(), L.EndDate.Month(), L.EndDate.Day(), 0, 0, 0, 0, time.UTC)
+	sd := time.Date(L.StartDate.Year(), L.StartDate.Month(), L.StartDate.Day(), 0, 0, 0, 0, time.UTC)
+	du := ed.Sub(sd).Hours() / 24
+
+	_, err = db.Exec("with shape_update as ( SELECT tb_leave_allowance.leave_id, current_leave, last_year_leave from tb_leave_allowance join tb_leave on tb_leave_allowance.leave_id = tb_leave.leave_id where tb_leave.form_id = $10) UPDATE tb_leave SET type = $1, start_date = $2, end_date = $3, description = $4, replacement_id = $5, address = $6, phone = $7, duration = $8 WHERE status = 'Draft' and form_id = $9 and (select leave_id from shape_update)= tb_leave.leave_id and $8 < ((select current_leave from shape_update) + (select last_year_leave from shape_update))",
+		L.Types, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, du, L.FormId, L.FormId)
+	if err != nil {
+		fmt.Println(err.Error())
+		Res = &ResponseModel{400, "Failed save Data"}
+		return Res
+	}
+	fmt.Println("Update success!")
+	Res = &ResponseModel{200, "Success save Data"}
+	return Res
+}

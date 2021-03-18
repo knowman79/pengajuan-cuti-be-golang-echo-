@@ -3,23 +3,21 @@ package schedule
 import (
 	"example/driver"
 	"example/models"
-	"log"
+	"fmt"
 )
 
 func CrossYearLeaveScheduler() {
 	db, err := driver.ConnectDB()
 
-	log.Println("Running Scheduler")
-
 	if err != nil {
-		log.Println(err.Error())
+		fmt.Println(err.Error())
 	}
 
 	sqlStatementSelect := `SELECT * FROM tb_leave_allowance`
 
 	items, err := db.Query(sqlStatementSelect)
 	if err != nil {
-		log.Println(err.Error())
+		fmt.Println(err.Error())
 	}
 
 	defer items.Close()
@@ -29,7 +27,7 @@ func CrossYearLeaveScheduler() {
 		var err = items.Scan(&each.LeaveId, &userId, &each.CurrentLeave, &each.LastYearLeave)
 
 		if err != nil {
-			log.Println(err.Error())
+			fmt.Println(err.Error())
 		}
 
 		each.LastYearLeave = each.CurrentLeave
@@ -38,12 +36,12 @@ func CrossYearLeaveScheduler() {
 		sqlStatementUpdate := `UPDATE tb_leave_allowance set last_year_leave = $1, current_leave= $2  WHERE leave_id = $3`
 		_, e := db.Exec(sqlStatementUpdate, each.LastYearLeave, each.CurrentLeave, each.LeaveId)
 		if e != nil {
-			log.Println(err.Error())
+			fmt.Println(err.Error())
 		}
 	}
 
 	if err = items.Err(); err != nil {
-		log.Println(err.Error())
+		fmt.Println(err.Error())
 	}
 
 }
