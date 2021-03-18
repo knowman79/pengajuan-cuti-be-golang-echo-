@@ -70,7 +70,7 @@ func Endpoint() {
 
 	//Allowing request from certain origin
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"https://localhost:8080", "http://51.79.185.235:9094", "http://localhost:8080", "https://matrix-3.cloudias79.com:9094/", "https://localhost:8081", "http://localhost:8081"},
+		AllowOrigins: []string{"https://localhost:8080", "http://51.79.185.235:9094", "http://localhost:8080", "https://matrix-3.cloudias79.com:9094/", "https://localhost:8081", "http://localhost:8081", "https://matrix-3.cloudias79.com"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
