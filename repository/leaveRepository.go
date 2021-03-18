@@ -155,7 +155,7 @@ func UpdateLeave(L *models.LeaveModel, formId int) *ResponseModel {
 	defer db.Close()
 	date := time.Now()
 
-	_, err = db.Exec("update tb_leave set user_id = $1, name = $2, type = $3 , created_by = $4, modified_by = $5, created_date = $6, last_modified_date =$7, start_date = $8, end_date = $9, description = $10, replacement_id =$11, address = $12, phone = $13, status = $14, status = $15 where form_id = $16",
+	_, err = db.Exec("update tb_leave set user_id = $1, name = $2, type = $3 , created_by = $4, modified_by = $5, created_date = $6, last_modified_date =$7, start_date = $8, end_date = $9, description = $10, replacement_id =$11, address = $12, phone = $13, status = $14, leave_id = $15 where form_id = $16",
 		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, L.CreatedDate, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status, L.LeaveId, formId)
 	if err != nil {
 		fmt.Println(err.Error())
