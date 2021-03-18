@@ -46,64 +46,54 @@ func DeleteLeave(c echo.Context) error {
 // UpdateUser function
 func UpdateLeave(c echo.Context) error {
 	Res := &ResponseModel{400, "Bad Request"}
-	id := c.QueryParam("formId")
-	data, _ := strconv.Atoi(id)
 	U := new(models.LeaveModel)
 	if err := c.Bind(U); err != nil {
 		return nil
 	}
-	Res = (*ResponseModel)(repository.UpdateLeave(U, data))
+	Res = (*ResponseModel)(repository.UpdateLeave(U))
 	return c.JSON(http.StatusOK, Res)
 }
 
 func DeleteLeaveDraft(c echo.Context) error {
 	Res := &ResponseModel{400, "Bad Request"}
-	id := c.QueryParam("formId")
-	data, _ := strconv.Atoi(id)
-	Res = (*ResponseModel)(repository.DeleteLeaveDraft(data))
+	U := new(models.LeaveModel)
+	Res = (*ResponseModel)(repository.DeleteLeaveDraft(U))
 	return c.JSON(http.StatusOK, Res)
 }
 
 func UpdateLeaveApproved(c echo.Context) error {
 	Res := &ResponseModel{400, "Bad Request"}
-	id := c.QueryParam("formId")
-	data, _ := strconv.Atoi(id)
 	U := new(models.LeaveModel)
 	if err := c.Bind(U); err != nil {
 		return nil
 	}
-	Res = (*ResponseModel)(repository.UpdateLeaveApproved(U, data))
+	Res = (*ResponseModel)(repository.UpdateLeaveApproved(U))
 	return c.JSON(http.StatusOK, Res)
 }
 
 func UpdateLeaveOpenToInprogress(c echo.Context) error {
 	Res := &ResponseModel{400, "Bad Request"}
-	id := c.QueryParam("formId")
-	data, _ := strconv.Atoi(id)
 	U := new(models.LeaveModel)
 	if err := c.Bind(U); err != nil {
 		return nil
 	}
-	Res = (*ResponseModel)(repository.UpdateLeaveOpenToInprogress(U, data))
+	Res = (*ResponseModel)(repository.UpdateLeaveOpenToInprogress(U))
 	return c.JSON(http.StatusOK, Res)
 }
 
 func ReadLeaveByName(c echo.Context) error {
 	name := c.QueryParam("name")
-	// data, _ := strconv.Atoi(name)
 	result := repository.ReadLeaveByName(name)
 	return c.JSON(http.StatusOK, result)
 }
 
 func UpdateLeaveDraftToOpen(c echo.Context) error {
 	Res := &ResponseModel{400, "Bad Request"}
-	id := c.QueryParam("formId")
-	data, _ := strconv.Atoi(id)
 	U := new(models.LeaveModel)
 	L := new(models.AllowanceModel)
 	if err := c.Bind(U); err != nil {
 		return nil
 	}
-	Res = (*ResponseModel)(repository.UpdateLeaveDraftToOpen(U, L, data))
+	Res = (*ResponseModel)(repository.UpdateLeaveDraftToOpen(U, L))
 	return c.JSON(http.StatusOK, Res)
 }

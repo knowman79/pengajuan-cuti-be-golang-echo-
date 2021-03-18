@@ -70,7 +70,7 @@ func Endpoint() {
 
 	//Allowing request from certain origin
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"https://localhost:8080", "http://51.79.185.235:9094", "http://localhost:8080"},
+		AllowOrigins: []string{"https://localhost:8080", "http://51.79.185.235:9094", "http://localhost:8080", "https://matrix-3.cloudias79.com:9094/", "https://localhost:8081", "http://localhost:8081"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
@@ -80,27 +80,27 @@ func Endpoint() {
 	//user endpoint
 	e.POST("/user/save", service.CreateUser)
 	e.GET("/user/readAll", service.ReadAllUser)
-	e.PATCH("/user/update", service.UpdateUser)
+	e.PUT("/user/update", service.UpdateUser)
 	e.DELETE("/user/delete", service.DeleteUser)
 	e.GET("/user/list", service.ReadAllOlUser)
 
 	//leave_allowance endpoint
 	e.POST("/allowance/save", service.CreateAllowance)
 	e.GET("/allowance/readAll", service.ReadAllAllowance)
-	e.PATCH("/allowance/update", service.UpdateAllowance)
+	e.PUT("/allowance/update", service.UpdateAllowance)
 	e.DELETE("/allowance/delete", service.DeleteAllowance)
 
 	//leave endpoint
 	e.GET("/leave/readAll", service.ReadAllLeave)
 	e.POST("/leave/save", service.CreateLeave)
 	e.DELETE("/leave/delete", service.DeleteLeave)
-	e.PATCH("/leave/update", service.UpdateLeave)
+	e.PUT("/leave/update", service.UpdateLeave)
 	e.GET("/leave/readById", service.ReadIdLeave)
 	e.DELETE("/leave/deleteDraft", service.DeleteLeaveDraft)
-	e.PATCH("/leave/updateApproved", service.UpdateLeaveApproved)
-	e.PATCH("/leave/updateToInprogress", service.UpdateLeaveOpenToInprogress)
+	e.PUT("/leave/updateApproved", service.UpdateLeaveApproved)
+	e.PUT("/leave/updateToInprogress", service.UpdateLeaveOpenToInprogress)
 	e.GET("/leave/readLeaveByName", service.ReadLeaveByName)
-	e.PATCH("/leave/updateToOpen", service.UpdateLeaveDraftToOpen)
+	e.PUT("/leave/updateToOpen", service.UpdateLeaveDraftToOpen)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
