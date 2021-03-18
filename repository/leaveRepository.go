@@ -94,8 +94,9 @@ func ReadIdLeave(userId int) []models.LeaveModel {
 	return result
 }
 
-func CreateLeave(L *models.LeaveModel) *ResponseModel {
+func CreateLeave(L *models.LeaveModel, M *models.AllowanceModel) *ResponseModel {
 	Res := &ResponseModel{500, "Internal Server Error"}
+
 	db, err := driver.ConnectDB()
 	if err != nil {
 		fmt.Println(err.Error())
@@ -105,20 +106,28 @@ func CreateLeave(L *models.LeaveModel) *ResponseModel {
 	defer db.Close()
 
 	date := time.Now()
+	duration := L.EndDate.Day() - L.StartDate.Day()
 
-	_, err = db.Exec(`INSERT INTO "tb_leave" ( "user_id", "name", "type", "created_by", "modified_by", "created_date", "last_modified_date",
-					"start_date", "end_date", "description", "replacement_id", "address", "phone", "status", "leave_id")
-					 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
-		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, date, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status, L.LeaveId)
+	_, err = db.Exec(`WITH shape_select as (
+                        INSERT INTO "tb_leave" ("user_id", "name", "type", "created_by", "modified_by", "created_date", "last_modified_date",
+                        "start_date", "end_date", "description", "replacement_id", "address", "phone", "status", "leave_id", "duration")
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+                        returning leave_id, user_id, duration)
+                    SELECT leave_id
+                    from tb_leave_allowance
+                    where tb_leave_allowance.leave_id = (select leave_id from shape_select) and (select duration from shape_select) < (tb_leave_allowance.current_leave+tb_leave_allowance.last_year_leave)`,
+		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, date, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status, L.LeaveId, duration)
 
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed save Data"}
 		return Res
 	}
+
 	fmt.Println("insert success!")
 	Res = &ResponseModel{200, "Success save Data"}
 	return Res
+
 }
 
 func DeleteLeave(formId int) *ResponseModel {
