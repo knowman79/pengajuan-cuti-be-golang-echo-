@@ -14,7 +14,9 @@ func main() {
 	if err != nil {
 		log.Println(err.Error())
 	}
+	// Cuti Lintas Tahun
 	s.Every().Second(0).Minute(0).Day(1).Month(1).Do(schedule.CrossYearLeaveScheduler)
+	// Cuti Hangus
 	s.Every().Second(0).Minute(0).Hour(0).Day(1).Month(7).Do(schedule.ExpiredLeaveScheduler)
 
 	// Running Enpoint

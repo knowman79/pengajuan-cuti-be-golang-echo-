@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type LeaveModel struct {
+type ResponseLeaveModel struct {
 	FormId           int       `json:"form_id" validate:"required" sql:"AUTO_INCREMENT"`
 	UserId           int       `json:"user_id" validate:"required"`
 	Name             string    `json:"name" validate:"required"`
@@ -13,8 +13,10 @@ type LeaveModel struct {
 	LastModifiedDate time.Time `json:"last_modified_date"`
 	StartDate        time.Time `json:"start_date" validate:"required"`
 	EndDate          time.Time `json:"end_date" validate:"required"`
+	LeaveDuration    int       `json:"leave_duration" validate:"required"`
 	Description      string    `json:"descpription" validate:"required"`
 	ReplacementId    int       `json:"replacement_id" validate:"required"`
+	ReplacementName  string    `json:"replacement_name" validate:"required"`
 	Address          string    `json:"address" validate:"required"`
 	Phone            string    `json:"phone" validate:"required"`
 	Status           string    `json:"status" validate:"required"`

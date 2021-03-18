@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func ReadAllLeave() []models.LeaveModel {
+func ReadAllLeave() []models.ResponseLeaveModel {
 	db, err := driver.ConnectDB()
 
 	if err != nil {
@@ -17,9 +17,9 @@ func ReadAllLeave() []models.LeaveModel {
 
 	defer db.Close()
 
-	var result []models.LeaveModel
+	var result []models.ResponseLeaveModel
 
-	items, err := db.Query(`select * from "tb_leave"`)
+	items, err := db.Query(`select form_id, tb_leave.user_id, tb_leave.name, type, created_by, modified_by, created_date, last_modified_date, start_date, end_date, end_date-start_date, description, replacement_id, address, phone, status, leave_id, tb_user."name" from tb_leave JOIN tb_user ON replacement_id = tb_user.user_id`)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil
@@ -28,10 +28,10 @@ func ReadAllLeave() []models.LeaveModel {
 	fmt.Printf("%T", items)
 
 	for items.Next() {
-		var each = models.LeaveModel{}
+		var each = models.ResponseLeaveModel{}
 		var err = items.Scan(&each.FormId, &each.UserId, &each.Name, &each.Types, &each.CreatedBy, &each.ModifiedBy,
-			&each.CreatedDate, &each.LastModifiedDate, &each.StartDate, &each.EndDate, &each.Description,
-			&each.ReplacementId, &each.Address, &each.Phone, &each.Status)
+			&each.CreatedDate, &each.LastModifiedDate, &each.StartDate, &each.EndDate, &each.LeaveDuration, &each.Description,
+			&each.ReplacementId, &each.Address, &each.Phone, &each.Status, &each.LeaveId, &each.ReplacementName)
 
 		if err != nil {
 			fmt.Println(err.Error())
@@ -74,7 +74,7 @@ func ReadIdLeave(userId int) []models.LeaveModel {
 		var each = models.LeaveModel{}
 		var err = items.Scan(&each.FormId, &each.UserId, &each.Name, &each.Types, &each.CreatedBy, &each.ModifiedBy,
 			&each.CreatedDate, &each.LastModifiedDate, &each.StartDate, &each.EndDate, &each.Description,
-			&each.ReplacementId, &each.Address, &each.Phone, &each.Status)
+			&each.ReplacementId, &each.Address, &each.Phone, &each.Status, &each.LeaveId)
 
 		if err != nil {
 			fmt.Println(err.Error())
@@ -106,9 +106,9 @@ func CreateLeave(L *models.LeaveModel) *ResponseModel {
 	date := time.Now()
 
 	_, err = db.Exec(`INSERT INTO "tb_leave" ( "user_id", "name", "type", "created_by", "modified_by", "created_date", "last_modified_date",
-					"start_date", "end_date", "description", "replacement_id", "address", "phone", "status")
-					 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
-		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, date, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status)
+					"start_date", "end_date", "description", "replacement_id", "address", "phone", "status", "leave_id")
+					 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, date, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status, L.LeaveId)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -155,8 +155,8 @@ func UpdateLeave(L *models.LeaveModel, formId int) *ResponseModel {
 	defer db.Close()
 	date := time.Now()
 
-	_, err = db.Exec("update tb_leave set user_id = $1, name = $2, type = $3 , created_by = $4, modified_by = $5, created_date = $6, last_modified_date =$7, start_date = $8, end_date = $9, description = $10, replacement_id =$11, address = $12, phone = $13, status = $14 where form_id = $15",
-		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, L.CreatedDate, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status, formId)
+	_, err = db.Exec("update tb_leave set user_id = $1, name = $2, type = $3 , created_by = $4, modified_by = $5, created_date = $6, last_modified_date =$7, start_date = $8, end_date = $9, description = $10, replacement_id =$11, address = $12, phone = $13, status = $14, status = $15 where form_id = $16",
+		L.UserId, L.Name, L.Types, L.CreatedBy, L.ModifiedBy, L.CreatedDate, date, L.StartDate, L.EndDate, L.Description, L.ReplacementId, L.Address, L.Phone, L.Status, L.LeaveId, formId)
 	if err != nil {
 		fmt.Println(err.Error())
 		Res = &ResponseModel{400, "Failed save Data"}
