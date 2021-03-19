@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"example/models"
 	"example/repository"
+	"log"
 	"net/http"
 	"time"
 
@@ -25,6 +26,7 @@ type MyClaims struct {
 func Login(c echo.Context) error {
 	U := new(models.LoginModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	result := repository.ReadUserByUsername(U.Username)
@@ -53,6 +55,7 @@ func Login(c echo.Context) error {
 
 				signedToken, err := token.SignedString(JWT_SIGNATURE_KEY)
 				if err != nil {
+					log.Println(err.Error())
 					return c.JSON(http.StatusBadRequest, err)
 				}
 

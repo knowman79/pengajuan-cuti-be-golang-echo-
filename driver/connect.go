@@ -3,6 +3,7 @@ package driver
 import (
 	"database/sql"
 	"fmt" // package used to read the .env file
+	"log"
 
 	_ "github.com/lib/pq" // postgres golang driver
 )
@@ -30,11 +31,13 @@ func ConnectDB() (*sql.DB, error) {
 		host, port, user, password, dbname)
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
+		log.Println(err.Error())
 		panic(err)
 	}
 
 	err = db.Ping()
 	if err != nil {
+		log.Println(err.Error())
 		panic(err)
 	}
 

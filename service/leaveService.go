@@ -3,6 +3,7 @@ package service
 import (
 	"example/models"
 	"example/repository"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -15,6 +16,7 @@ func CreateLeave(c echo.Context) error {
 	U := new(models.LeaveModel)
 	L := new(models.AllowanceModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModel)(repository.CreateLeave(U, L))
@@ -49,6 +51,7 @@ func UpdateLeave(c echo.Context) error {
 	Res := &ResponseModel{400, "Bad Request"}
 	U := new(models.LeaveModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModel)(repository.UpdateLeave(U))
@@ -66,6 +69,7 @@ func UpdateLeaveApproved(c echo.Context) error {
 	Res := &ResponseModel{400, "Bad Request"}
 	U := new(models.LeaveModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModel)(repository.UpdateLeaveApproved(U))
@@ -76,6 +80,7 @@ func UpdateLeaveOpenToInprogress(c echo.Context) error {
 	Res := &ResponseModel{400, "Bad Request"}
 	U := new(models.LeaveModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModel)(repository.UpdateLeaveOpenToInprogress(U))
@@ -93,6 +98,7 @@ func UpdateLeaveDraftToOpen(c echo.Context) error {
 	U := new(models.LeaveModel)
 	L := new(models.AllowanceModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModel)(repository.UpdateLeaveDraftToOpen(U, L))
@@ -104,6 +110,7 @@ func UpdateLeaveCanceled(c echo.Context) error {
 	U := new(models.LeaveModel)
 	L := new(models.AllowanceModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModel)(repository.UpdateLeaveCanceled(U, L))
@@ -115,6 +122,7 @@ func UpdateRejectBySPV(c echo.Context) error {
 	U := new(models.LeaveModel)
 	L := new(models.AllowanceModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModel)(repository.UpdateRejectBySPV(U, L))
@@ -126,6 +134,7 @@ func UpdateLeaveRejectByHRD(c echo.Context) error {
 	U := new(models.LeaveModel)
 	L := new(models.AllowanceModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModel)(repository.UpdateLeaveRejectByHRD(U, L))
@@ -137,6 +146,7 @@ func UpdateStatusDraft(c echo.Context) error {
 	U := new(models.LeaveModel)
 	L := new(models.AllowanceModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModel)(repository.UpdateStatusDraft(U, L))
