@@ -106,7 +106,7 @@ func CreateLeave(L *models.LeaveModel, M *models.AllowanceModel) *ResponseModel 
 	defer db.Close()
 
 	date := time.Now()
-	duration := L.EndDate.Day() - L.StartDate.Day()
+	duration := L.EndDate.Day() - L.StartDate.Day() +1
 
 	_, err = db.Exec(`WITH shape_select as (
                         INSERT INTO "tb_leave" ("user_id", "name", "type", "created_by", "modified_by", "created_date", "last_modified_date",
