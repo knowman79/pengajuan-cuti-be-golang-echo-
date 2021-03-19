@@ -4,6 +4,7 @@ import (
 	"example/models"
 	"example/repository"
 	"fmt"
+	"log"
 	"strconv"
 
 	"net/http"
@@ -22,6 +23,7 @@ func CreateAllowance(c echo.Context) error {
 	Res := &ResponseModelAllowance{400, "Bad Request"}
 	U := new(models.AllowanceModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModelAllowance)(repository.CreateAllowance(U))
@@ -51,6 +53,7 @@ func UpdateAllowance(c echo.Context) error {
 	data, _ := strconv.Atoi(id)
 	U := new(models.AllowanceModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModelAllowance)(repository.UpdateAllowance(U, data))

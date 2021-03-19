@@ -4,6 +4,7 @@ import (
 	"example/models"
 	"example/repository"
 	"fmt"
+	"log"
 	"strconv"
 
 	"net/http"
@@ -51,6 +52,7 @@ func UpdateUser(c echo.Context) error {
 	data, _ := strconv.Atoi(id)
 	U := new(models.UserModel)
 	if err := c.Bind(U); err != nil {
+		log.Println(err.Error())
 		return nil
 	}
 	Res = (*ResponseModel)(repository.UpdateUser(U, data))

@@ -3,23 +3,19 @@ package routes
 import (
 	"example/service"
 	"net/http"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	//"github.com/labstack/echo/v4/middleware"
 )
 
-/*
-func accessible(c echo.Context) error {
-	return c.String(http.StatusOK, "Accessible")
-}
+var APPLICATION_NAME = "Leave Application"
+var LOGIN_EXPIRATION_DURATION = time.Duration(24) * time.Hour
+var JWT_SIGNING_METHOD = jwt.SigningMethodHS256
+var JWT_SIGNATURE_KEY = []byte("bematrix1")
 
-func restricted(c echo.Context) error {
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*service.MyClaims)
-	return c.String(http.StatusOK, "Welcome !")
-}
-*/
 //EndPoint function
 func Endpoint() {
 	e := echo.New()
@@ -34,14 +30,7 @@ func Endpoint() {
 	}))
 
 	//JWT Authorization
-	// Configure middleware with the custom claims type
-	/*
-		config := middleware.JWTConfig{
-			Claims:     &service.MyClaims{},
-			SigningKey: []byte("secret"),
-		}
-		r.Use(middleware.JWTWithConfig(config))
-	*/
+	//e.Use(middleware.MiddlewareJWTAuthorization())
 
 	//login endpoint
 	e.POST("/login", service.Login)
