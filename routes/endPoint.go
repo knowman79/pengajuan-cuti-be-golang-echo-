@@ -31,6 +31,30 @@ func Endpoint() {
 
 	//JWT Authorization
 	//e.Use(middleware.MiddlewareJWTAuthorization())
+	/*
+		api := e.Group("/api", func(h echo.HandlerFunc) echo.HandlerFunc {
+			return func(c *echo.Context) error {
+				tokenString := c.Request().Header.Get("x-access-token")
+				if tokenString == "" {
+					return errors.New("Token isvalid")
+				}
+				token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+					if token.Claims["uid"] != "admin" {
+						return nil, errors.New("User isvalid")
+					}
+					return []byte(SECUREKEY), nil
+				})
+				if err != nil {
+					return err
+				}
+				c.Set("Uid", token.Claims["uid"])
+				return h(c)
+			}
+		})
+		{
+			api.Get("/data", GetData)
+		}
+	*/
 
 	//login endpoint
 	e.POST("/login", service.Login)
