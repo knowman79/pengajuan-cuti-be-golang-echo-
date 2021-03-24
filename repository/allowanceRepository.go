@@ -6,11 +6,13 @@ import (
 	"fmt"
 )
 
+// ResponseModelAllowance . . .
 type ResponseModelAllowance struct {
 	Code    int    `json:"code" validate:"required"`
 	Message string `json:"message" validate:"required"`
 }
 
+// ReadAllAllowance . . .
 func ReadAllAllowance() []models.AllowanceModel {
 	db, err := driver.ConnectDB()
 

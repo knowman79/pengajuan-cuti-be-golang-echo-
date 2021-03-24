@@ -12,13 +12,13 @@ import (
 	"github.com/labstack/echo"
 )
 
-// ResponseModel function
+// ResponseModelAllowance . . .
 type ResponseModelAllowance struct {
 	Code    int    `json:"code" validate:"required"`
 	Message string `json:"message" validate:"required"`
 }
 
-// CreateUser function
+// CreateAllowance . . .
 func CreateAllowance(c echo.Context) error {
 	Res := &ResponseModelAllowance{400, "Bad Request"}
 	U := new(models.AllowanceModel)
@@ -30,13 +30,13 @@ func CreateAllowance(c echo.Context) error {
 	return c.JSON(http.StatusOK, Res)
 }
 
-// ReadAllUser function
+// ReadAllAllowance . . .
 func ReadAllAllowance(c echo.Context) error {
 	result := repository.ReadAllAllowance()
 	return c.JSON(http.StatusOK, result)
 }
 
-// DeleteUser function
+// DeleteAllowance . . .
 func DeleteAllowance(c echo.Context) error {
 	Res := &ResponseModelAllowance{400, "Bad Request"}
 	id := c.QueryParam("leaveId")
@@ -46,7 +46,7 @@ func DeleteAllowance(c echo.Context) error {
 	return c.JSON(http.StatusOK, Res)
 }
 
-// UpdateUser function
+// UpdateAllowance . . .
 func UpdateAllowance(c echo.Context) error {
 	Res := &ResponseModelAllowance{400, "Bad Request"}
 	id := c.QueryParam("leaveId")

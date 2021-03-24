@@ -11,13 +11,20 @@ import (
 	//"github.com/labstack/echo/v4/middleware"
 )
 
+// APPLICATION_NAME . . .
 var APPLICATION_NAME = "Leave Application"
-var LOGIN_EXPIRATION_DURATION = time.Duration(24) * time.Hour
-var JWT_SIGNING_METHOD = jwt.SigningMethodHS256
-var JWT_SIGNATURE_KEY = []byte("bematrix1")
 
-//EndPoint function
-func Endpoint() {
+// LOGIN_EXPIRATION_DURATION . . .
+var LOGIN_EXPIRATION_DURATION = time.Duration(24) * time.Hour
+
+// JWT_SIGNING_METHOD . . .
+var JWT_SIGNING_METHOD = jwt.SigningMethodHS256
+
+// JWT_SIGNATURE_KEY . . .
+var JWT_SIGNATURE_KEY = []byte("bematrix3")
+
+//EndPoint . . .
+func EndPoint() {
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -28,33 +35,6 @@ func Endpoint() {
 		AllowOrigins: []string{"https://localhost:8080", "http://51.79.185.235:9094", "http://localhost:8080", "https://matrix-3.cloudias79.com:9094/", "https://localhost:8081", "http://localhost:8081", "https://matrix-3.cloudias79.com", "https://localhost"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
-
-	//JWT Authorization
-	//e.Use(middleware.MiddlewareJWTAuthorization())
-	/*
-		api := e.Group("/api", func(h echo.HandlerFunc) echo.HandlerFunc {
-			return func(c *echo.Context) error {
-				tokenString := c.Request().Header.Get("x-access-token")
-				if tokenString == "" {
-					return errors.New("Token isvalid")
-				}
-				token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-					if token.Claims["uid"] != "admin" {
-						return nil, errors.New("User isvalid")
-					}
-					return []byte(SECUREKEY), nil
-				})
-				if err != nil {
-					return err
-				}
-				c.Set("Uid", token.Claims["uid"])
-				return h(c)
-			}
-		})
-		{
-			api.Get("/data", GetData)
-		}
-	*/
 
 	//login endpoint
 	e.POST("/login", service.Login)
@@ -80,7 +60,7 @@ func Endpoint() {
 	e.POST("/leave/save", service.CreateLeave)
 	e.DELETE("/leave/delete", service.DeleteLeave)
 	e.PUT("/leave/update", service.UpdateLeave)
-	e.GET("/leave/readById", service.ReadIdLeave)
+	e.GET("/leave/readById", service.ReadIDLeave)
 	e.DELETE("/leave/deleteDraft", service.DeleteLeaveDraft)
 	e.PUT("/leave/updateApproved", service.UpdateLeaveApproved)
 	e.PUT("/leave/updateToInprogress", service.UpdateLeaveOpenToInprogress)
