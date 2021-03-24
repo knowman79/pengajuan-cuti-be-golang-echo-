@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-// // Create function
+// CreateLeave . . .
 func CreateLeave(c echo.Context) error {
 	Res := &ResponseModel{400, "Bad Request"}
 	U := new(models.LeaveModel)
@@ -23,14 +23,14 @@ func CreateLeave(c echo.Context) error {
 	return c.JSON(http.StatusOK, Res)
 }
 
-// ReadAll function
+// ReadAllLeave . . .
 func ReadAllLeave(c echo.Context) error {
 	result := repository.ReadAllLeave()
 	return c.JSON(http.StatusOK, result)
 }
 
-// ReadAll function
-func ReadIdLeave(c echo.Context) error {
+// ReadIdLeave . . .
+func ReadIDLeave(c echo.Context) error {
 	id := c.QueryParam("userId")
 	data, _ := strconv.Atoi(id)
 	result := repository.ReadIdLeave(data)
@@ -125,7 +125,7 @@ func UpdateRejectBySPV(c echo.Context) error {
 		log.Println(err.Error())
 		return nil
 	}
-	Res = (*ResponseModel)(repository.UpdateRejectBySPV(U, L))
+	Res = (*ResponseModel)(repository.UpdateLeaveRejectByHRD(U, L))
 	return c.JSON(http.StatusOK, Res)
 }
 

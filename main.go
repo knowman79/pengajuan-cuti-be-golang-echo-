@@ -15,10 +15,10 @@ func main() {
 		log.Println(err.Error())
 	}
 	// Cuti Lintas Tahun
-	s.Every().Second(0).Minute(0).Day(1).Month(1).Do(schedule.CrossYearLeaveScheduler)
+	s.Every().Second(0).Minute(0).Hour(11).Day(19).Month(3).Do(schedule.CrossYearLeaveScheduler)
 	// Cuti Hangus
-	s.Every().Second(0).Minute(0).Hour(0).Day(1).Month(7).Do(schedule.ExpiredLeaveScheduler)
+	s.Every().Second(0).Minute(3).Hour(11).Day(19).Month(3).Do(schedule.ExpiredLeaveScheduler)
 
 	// Running Enpoint
-	routes.Endpoint()
+	routes.EndPoint()
 }
